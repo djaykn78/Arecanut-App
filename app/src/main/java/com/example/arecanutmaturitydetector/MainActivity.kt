@@ -18,12 +18,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 
 class MainActivity : AppCompatActivity() {
 
@@ -170,11 +174,37 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun runInference(bitmap: Bitmap) {
-        val inputBuffer = ImageUtils.bitmapToByteBuffer(bitmap)
-        val (label, confidence) = classifier.classify(inputBuffer)
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
 
-        txtResult.text = "Result: $label"
-        txtConfidence.text = "Confidence: ${"%.2f".format(confidence * 100)}%"
+        labeler.process(image)
+            .addOnSuccessListener { labels ->
+
+                for (label in labels) {
+                    android.util.Log.d("MLKit", "Label: ${label.text}, Confidence: ${label.confidence}")
+                }
+
+                val matchingLabels = labels.count { label ->
+                    val text = label.text.lowercase()
+                    text.contains("food") || text.contains("fruit") ||
+                            text.contains("cuisine") || text.contains("vegetable") ||
+                            text.contains("plant")
+                }
+                val isArecanut = matchingLabels >= 2
+
+                if (isArecanut) {
+                    val inputBuffer = ImageUtils.bitmapToByteBuffer(bitmap)
+                    val (label, confidence) = classifier.classify(inputBuffer)
+                    txtResult.text = "Result: $label"
+                    txtConfidence.text = "Confidence: ${"%.2f".format(confidence * 100)}%"
+                } else {
+                    txtResult.text = "Not an Arecanut Bunch"
+                    txtConfidence.text = "Please upload a valid arecanut image"
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Image check failed: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onDestroy() {

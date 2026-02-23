@@ -25,7 +25,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        mlModelBinding = true
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
 }
+
+
+
 
 
 dependencies {
@@ -43,6 +57,7 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:1.3.6")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.mlkit:image-labeling:17.0.7")
 
     // Testing
     testImplementation(libs.junit)
