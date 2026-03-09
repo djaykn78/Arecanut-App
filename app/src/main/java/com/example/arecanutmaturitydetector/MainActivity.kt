@@ -12,13 +12,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
@@ -32,6 +33,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 class MainActivity : AppCompatActivity() {
 
     private lateinit var imageView: ImageView
+    private lateinit var placeholderView: LinearLayout
     private lateinit var btnSelect: Button
     private lateinit var btnCamera: Button
     private lateinit var btnPredict: Button
@@ -52,12 +54,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        imageView = findViewById(R.id.imageView)
-        btnSelect = findViewById(R.id.btnSelectImage)
+        imageView = findViewById(R.id.imagePreview)
+        placeholderView = findViewById(R.id.placeholderView)
+        btnSelect = findViewById(R.id.btnGallery)
         btnCamera = findViewById(R.id.btnCamera)
         btnPredict = findViewById(R.id.btnPredict)
-        txtResult = findViewById(R.id.txtResult)
-        txtConfidence = findViewById(R.id.txtConfidence)
+        txtResult = findViewById(R.id.tvResult)
+        txtConfidence = findViewById(R.id.tvConfidence)
 
         classifier = ImageClassifier(this)
 
@@ -145,19 +148,26 @@ class MainActivity : AppCompatActivity() {
                     val imageUri: Uri? = data?.data
                     imageUri?.let {
                         selectedBitmap = loadBitmapFromUri(it)
-                        imageView.setImageBitmap(selectedBitmap)
-                        btnPredict.isEnabled = true
+                        showSelectedImage(selectedBitmap)
                     }
                 }
                 CAMERA_REQUEST_CODE -> {
                     val file = File(currentPhotoPath)
                     if (file.exists()) {
                         selectedBitmap = BitmapFactory.decodeFile(currentPhotoPath)
-                        imageView.setImageBitmap(selectedBitmap)
-                        btnPredict.isEnabled = true
+                        showSelectedImage(selectedBitmap)
                     }
                 }
             }
+        }
+    }
+
+    private fun showSelectedImage(bitmap: Bitmap?) {
+        bitmap?.let {
+            imageView.setImageBitmap(it)
+            imageView.visibility = View.VISIBLE
+            placeholderView.visibility = View.GONE
+            btnPredict.isEnabled = true
         }
     }
 

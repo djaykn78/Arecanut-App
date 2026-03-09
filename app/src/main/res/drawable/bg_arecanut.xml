@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Save this file in: res/drawable/bg_arecanut.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base deep forest green gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#0F2412"
+                android:centerColor="#1A3A1F"
+                android:endColor="#2D6A35" />
+        </shape>
+    </item>
+
+    <!-- Top-left green glow -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="400dp"
+                android:startColor="#4A4A9E56"
+                android:endColor="#002D6A35" />
+            <size android:width="400dp" android:height="400dp" />
+        </shape>
+    </item>
+
+</layer-list>

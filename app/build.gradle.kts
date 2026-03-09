@@ -38,10 +38,6 @@ android {
     }
 }
 
-
-
-
-
 dependencies {
     // TensorFlow Lite
     implementation("org.tensorflow:tensorflow-lite:2.14.0")

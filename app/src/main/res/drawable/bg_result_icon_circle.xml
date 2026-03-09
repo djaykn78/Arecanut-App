@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/bg_result_icon_circle.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="40dp"
+        android:startColor="#33C9A84C"
+        android:endColor="#11C9A84C" />
+    <stroke
+        android:width="2dp"
+        android:color="#80C9A84C" />
+</shape>
